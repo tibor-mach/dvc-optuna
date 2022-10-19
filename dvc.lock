@@ -7,13 +7,13 @@ stages:
       md5: 4b84249e51a366c79d6dad7e44f7d383
       size: 156
     - path: stages/dvc_optuna.py
-      md5: d2387ce5797639a17b4da4cea39eada5
-      size: 752
+      md5: 445c4482566223ca2f4acda87cfabba3
+      size: 809
     params:
       params.yaml:
         n_trials: 5
         seed: 43
     outs:
     - path: model/model.joblib
-      md5: 82086a10735769cb3d9d3c6038a977cd
-      size: 651
+      md5: 77b69ed3a9a04da5ea9c1978e699fd08
+      size: 658
