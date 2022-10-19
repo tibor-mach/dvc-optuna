@@ -1,4 +1,19 @@
-# Notes
+## How to try the demonstration
+
+1. call `make venv` to set up the virtual environment (and activate it by `source .venv/bin/activate`)
+2. call `dvc exp run`
+3. call `dvc exp show` to observe the checkpointed models for each trial
+
+This is just a simple demonstration, no metrics or plots are logged in the checkpoints but there is
+nothing difficult about that.
+
+Note that it is common to retrain the best model(s) coming from hyperparameter optimization on both
+train and test data (and doing a final evaluation on a validation dataset) and in case of cross-validation
+it probably makes little sense to checkpoint individual folds (but rather a model refitted on all folds for each trial).
+
+Again, there should be nothing complicated about that though.
+
+## Notes
 
 - Recording Optuna trials with DVC easy - just use dvc.api.make_checkpoint()
 - This will also work with pruning (an option to choose whether to checkpoint pruned trials)
