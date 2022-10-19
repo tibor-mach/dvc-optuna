@@ -1,0 +1,35 @@
+hyperparam_tuning: True
+
+estimator_used: &estimator_used xgboost_classifier
+target_column: &target_column RainTomorrow
+
+paths:
+  data_train: data/data_train.csv
+  data_test: data/data_test.csv
+  model_unfitted: models/model_unfitted.pkl
+  model_fitted: models/model_fitted.pkl
+  hypersearch_result: models/hypersearch_result.pkl
+  hyperparams: models/hyperparams.json
+  feature_importances: monitoring/feature_importances.csv
+  estimator_metrics: monitoring/estimator_metrics.json
+  precision_recall_curve: monitoring/precision_recall_curve.csv
+  confusion: monitoring/confusion.csv
+  lift_curve: monitoring/lift_curve.csv
+  params_preprocessing: params/params_preprocessing.yaml
+  params_estimators: params/params_estimators.yaml
+
+data:
+  path: tabular/weather_australia.csv
+  repo: git@github.com:tibor-mach/simple-ml-data-registry.git
+  rev: v0.1.0
+
+assemble_model:
+  column_transformer_kwargs:
+    n_jobs: -1
+  estimator_used: *estimator_used
+
+train_test_split:
+  group_column: Location
+  target_column: *target_column
+
+# evaluation:

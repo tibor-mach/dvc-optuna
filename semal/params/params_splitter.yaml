@@ -1,0 +1,7 @@
+splitter:
+  class_module: sklearn.model_selection
+  class_name: GroupShuffleSplit
+  params:
+    test_size: 0.3
+    # figure out how to have a global random state across yaml files...or a workaround
+    random_state: 42

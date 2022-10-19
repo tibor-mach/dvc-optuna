@@ -1,0 +1,255 @@
+schema: '2.0'
+stages:
+  train_test_split:
+    cmd: python stages/train_test_split.py
+    deps:
+    - path: ../requirements.txt
+      md5: f112043301f6b033a29c6b11af1f1da9
+      size: 382
+    - path: stages/train_test_split.py
+      md5: da1ce111ba16e35fc48fdfdcd6d68683
+      size: 1290
+    params:
+      params/params.yaml:
+        data:
+          path: tabular/weather_australia.csv
+          repo: git@github.com:tibor-mach/simple-ml-data-registry.git
+          rev: v0.1.0
+        paths.data_test: data/data_test.csv
+        paths.data_train: data/data_train.csv
+        target_column: RainTomorrow
+        train_test_split:
+          group_column: Location
+          target_column: RainTomorrow
+      params/params_splitter.yaml:
+        splitter:
+          class_module: sklearn.model_selection
+          class_name: GroupShuffleSplit
+          params:
+            test_size: 0.3
+            random_state: 42
+    outs:
+    - path: data/data_test.csv
+      md5: 92adfa4d7929ad90a8c7502af2515fdd
+      size: 4703501
+    - path: data/data_train.csv
+      md5: 52a5bdd662e09079089892d332b2774d
+      size: 10434349
+  assemble_model:
+    cmd: python stages/assemble_model.py
+    deps:
+    - path: ../requirements.txt
+      md5: f112043301f6b033a29c6b11af1f1da9
+      size: 382
+    - path: stages/assemble_model.py
+      md5: ad2e8952b7bb1c5a71657c93bac1f2c6
+      size: 1047
+    params:
+      params/params.yaml:
+        assemble_model:
+          column_transformer_kwargs:
+            n_jobs: -1
+          estimator_used: xgboost_classifier
+        paths.model_unfitted: models/model_unfitted.pkl
+        paths.params_estimators: params/params_estimators.yaml
+        paths.params_preprocessing: params/params_preprocessing.yaml
+      params/params_estimators.yaml:
+        xgboost_classifier.class_module: xgboost
+        xgboost_classifier.class_name: XGBClassifier
+        xgboost_classifier.params:
+          eval_metric: aucpr
+          booster: gbtree
+          tree_method: hist
+          n_estimators: 150
+          learning_rate: 0.2
+          max_depth: 10
+          gamma: 6.0
+          subsample: 0.9
+          random_state: 0
+    outs:
+    - path: models/model_unfitted.pkl
+      md5: 81fbd17fcfb2be6836c9dda9d43192b7
+      size: 1228
+  hyperparam_tuning:
+    cmd: python stages/hyperparam_tuning.py
+    deps:
+    - path: ../requirements.txt
+      md5: f112043301f6b033a29c6b11af1f1da9
+      size: 382
+    - path: data/data_train.csv
+      md5: 52a5bdd662e09079089892d332b2774d
+      size: 10434349
+    - path: models/model_unfitted.pkl
+      md5: 81fbd17fcfb2be6836c9dda9d43192b7
+      size: 1228
+    - path: stages/hyperparam_tuning.py
+      md5: b47b54eb8c8603b3c9191ce1c6bc0fc2
+      size: 2674
+    params:
+      params/params.yaml:
+        estimator_used: xgboost_classifier
+        hyperparam_tuning: true
+        paths.data_train: data/data_train.csv
+        paths.hypersearch_result: models/hypersearch_result.pkl
+        paths.model_unfitted: models/model_unfitted.pkl
+        target_column: RainTomorrow
+      params/params_estimators.yaml:
+        xgboost_classifier.hyperparam_space:
+          n_estimators:
+            name: IntUniformDistribution
+            attributes:
+              low: 10
+              high: 200
+          learning_rate:
+            name: UniformDistribution
+            attributes:
+              low: 0.0
+              high: 1.0
+          max_depth:
+            name: IntUniformDistribution
+            attributes:
+              low: 2
+              high: 10
+          gamma:
+            name: UniformDistribution
+            attributes:
+              low: 0.0
+              high: 20
+        xgboost_classifier.search_params:
+          n_trials: 5
+          cv: 5
+          random_state: 0
+      params/params_preprocessing.yaml:
+        cardinal_features:
+          steps:
+            imputer:
+              transformer: SimpleImputer
+              params:
+                strategy: median
+            scaler:
+              transformer: RobustScaler
+          features_in:
+          - MinTemp
+          - MaxTemp
+          - Rainfall
+          - Humidity9am
+          - Humidity3pm
+          - Pressure9am
+          - Pressure3pm
+          - Temp9am
+          - Temp3pm
+        nominal_features:
+          steps:
+            impute_missing:
+              transformer: SimpleImputer
+              params:
+                strategy: constant
+                fill_value: missing_value
+            onehot_encoder:
+              transformer: OneHotEncoder
+              params:
+                handle_unknown: infrequent_if_exist
+                min_frequency: 0.01
+              hyperparam_space:
+                min_frequency:
+                  name: UniformDistribution
+                  attributes:
+                    low: 2
+                    high: 10
+          features_in:
+          - Location
+          - WindGustDir
+          - WindDir9am
+          - WindDir3pm
+        ordinal_features:
+          steps:
+            ordinal_encoder:
+              transformer: OrdinalEncoder
+              params:
+                handle_unknown: use_encoded_value
+                unknown_value: -1
+                encoded_missing_value: -2
+          features_in:
+          - RainToday
+        passthrough_features:
+          steps:
+            passthrough:
+              transformer: passthrough
+          features_in: []
+    outs:
+    - path: models/hypersearch_result.pkl
+      md5: 3ce473410038bad04afe0b6311fcb76c
+      size: 167557
+  fit_model:
+    cmd: python stages/fit_model.py
+    deps:
+    - path: ../requirements.txt
+      md5: f112043301f6b033a29c6b11af1f1da9
+      size: 382
+    - path: data/data_train.csv
+      md5: 52a5bdd662e09079089892d332b2774d
+      size: 10434349
+    - path: models/hypersearch_result.pkl
+      md5: 3ce473410038bad04afe0b6311fcb76c
+      size: 167557
+    - path: models/model_unfitted.pkl
+      md5: 81fbd17fcfb2be6836c9dda9d43192b7
+      size: 1228
+    - path: stages/fit_model.py
+      md5: cd2a24ac1b0c78b9e74446310847a6e1
+      size: 1132
+    params:
+      params/params.yaml:
+        hyperparam_tuning: true
+        paths.data_train: data/data_train.csv
+        paths.hypersearch_result: models/hypersearch_result.pkl
+        paths.model_fitted: models/model_fitted.pkl
+        paths.model_unfitted: models/model_unfitted.pkl
+    outs:
+    - path: models/model_fitted.pkl
+      md5: 4e40c2ae9b20d6b4f0a5606657487f30
+      size: 8492
+  evaluate:
+    cmd: python stages/evaluate.py
+    deps:
+    - path: ../requirements.txt
+      md5: a1b9b2920dbff4c4d3114f6544f58f5a
+      size: 382
+    - path: data/data_test.csv
+      md5: 92adfa4d7929ad90a8c7502af2515fdd
+      size: 4703501
+    - path: data/data_train.csv
+      md5: 52a5bdd662e09079089892d332b2774d
+      size: 10434349
+    - path: models/model_fitted.pkl
+      md5: d64458cdc65506866438403a7da47f46
+      size: 8453
+    - path: stages/evaluate.py
+      md5: 59377ed48d2a08dcf1b4232808dae067
+      size: 9683
+    params:
+      params/params.yaml:
+        evaluation:
+          threshold_confusion_matrix: 0.1
+          n_lift_curve_bins: 5
+        paths.confusion: monitoring/confusion.csv
+        paths.data_test: data/data_test.csv
+        paths.data_train: data/data_train.csv
+        paths.estimator_metrics: monitoring/estimator_metrics.json
+        paths.hyperparams: models/hyperparams.json
+        paths.lift_curve: monitoring/lift_curve.csv
+        paths.model_fitted: models/model_fitted.pkl
+        paths.precision_recall_curve: monitoring/precision_recall_curve.csv
+    outs:
+    - path: monitoring/confusion.csv
+      md5: d783dfb34090fbd567e76c4830c84e8e
+      size: 570766
+    - path: monitoring/estimator_metrics.json
+      md5: 5af3aed387b8e5595bd110e6d1249ab6
+      size: 227
+    - path: monitoring/lift_curve.csv
+      md5: 513f222033b591aeeb96a4904931cef0
+      size: 405
+    - path: monitoring/precision_recall_curve.csv
+      md5: 26db48b506d2cccf688712eaf314c1a7
+      size: 457858

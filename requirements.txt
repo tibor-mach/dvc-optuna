@@ -1,0 +1,27 @@
+# data processing and modelling
+pandas==1.4
+scikit-learn==1.1
+
+# gradient boosting
+catboost==1.0.6
+xgboost==1.6
+
+# forecasting
+# darts==0.22
+# pytorch-forecasting==0.10
+
+# nlp
+# transformers[torch]
+
+# hyperparameter optimization
+optuna==3.0
+
+# pipelines, visualisations and monitoring
+dvc[s3]==2.29
+
+# versioning, deployment
+mlem==0.2.8
+
+# other tools
+python-dotenv[cli]
+python-box

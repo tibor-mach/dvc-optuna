@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  devenv:
+    working_dir: /home/${USER}/simple-ml-core
+    volumes:
+    - type: bind
+      source: ${localEnv:HOME}/.ssh
+      target: /home/${localEnv:USER}/.ssh
+      read_only: false
+    - type: bind
+      source: ..
+      target: /home/${USER}/simple-ml-core
+      read_only: false
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+      args:
+        -  USERNAME=${USER}
+    # environment:

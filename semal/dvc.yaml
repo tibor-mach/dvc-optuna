@@ -1,0 +1,125 @@
+vars:
+  - params/params.yaml
+  - params/params_splitter.yaml
+  - params/params_preprocessing.yaml
+  - params/params_estimators.yaml
+
+stages:
+  train_test_split:
+    cmd: python stages/train_test_split.py
+    deps:
+      - ../requirements.txt
+      - stages/train_test_split.py
+
+    outs:
+      - ${paths.data_train}
+      - ${paths.data_test}
+    params:
+      - params/params.yaml:
+          - data
+          - target_column
+          - train_test_split
+          - paths.data_test
+          - paths.data_train
+      - params/params_splitter.yaml:
+
+  assemble_model:
+    cmd: python stages/assemble_model.py
+    deps:
+      - ../requirements.txt
+      - stages/assemble_model.py
+    outs:
+      - ${paths.model_unfitted}
+    params:
+      - params/params.yaml:
+          - paths.model_unfitted
+          - paths.params_preprocessing
+          - paths.params_estimators
+          - assemble_model
+      - params/params_estimators.yaml:
+          - ${assemble_model.estimator_used}.class_module
+          - ${assemble_model.estimator_used}.class_name
+          - ${assemble_model.estimator_used}.params
+
+  hyperparam_tuning:
+    cmd: python stages/hyperparam_tuning.py
+    deps:
+      - ../requirements.txt
+      - stages/hyperparam_tuning.py
+      - ${paths.model_unfitted}
+      - ${paths.data_train}
+    outs:
+      - ${paths.hypersearch_result}
+    params:
+      - params/params.yaml:
+          - paths.data_train
+          - paths.model_unfitted
+          - hyperparam_tuning
+          - paths.hypersearch_result
+          - target_column
+          - estimator_used
+      - params/params_preprocessing.yaml:
+      - params/params_estimators.yaml:
+          - ${assemble_model.estimator_used}.hyperparam_space
+          - ${assemble_model.estimator_used}.search_params
+
+  fit_model:
+    cmd: python stages/fit_model.py
+    deps:
+      - ../requirements.txt
+      - stages/fit_model.py
+      - ${paths.data_train}
+      - ${paths.model_unfitted}
+      - ${paths.hypersearch_result}
+    outs:
+      - ${paths.model_fitted}
+    params:
+      - params/params.yaml:
+          - paths.data_train
+          - paths.model_unfitted
+          - paths.hypersearch_result
+          - paths.model_fitted
+          - hyperparam_tuning
+
+  # evaluate:
+  #   cmd: python stages/evaluate.py
+  #   deps:
+  #     - ../requirements.txt
+  #     - stages/evaluate.py
+  #     - ${paths.model_fitted}
+  #     - ${paths.data_train}
+  #     - ${paths.data_test}
+  #   params:
+  #     - params/params.yaml:
+  #         - paths.model_fitted
+  #         - paths.data_train
+  #         - paths.data_test
+  #         - paths.hyperparams
+  #         - paths.precision_recall_curve
+  #         - paths.lift_curve
+  #         - paths.confusion
+  #         - paths.estimator_metrics
+  #         - evaluation
+  #   metrics:
+  #     # - ${paths.hyperparams}
+  #     - ${paths.estimator_metrics}
+  #   plots:
+  #     - ${paths.precision_recall_curve}:
+  #         title: "Precision recall curve (test)"
+  #         x: recall
+  #         y: precision
+  #     - ${paths.confusion}:
+  #         template: confusion_normalized
+  #         title: "Confusion matrix (test)"
+  #         x: predicted
+  #         y: actual
+  #     - ${paths.feature_importances}:
+  #         template: bar
+  #         title: "importances (test)"
+  #         x: importance
+  #         y: feature_name
+  #     - ${paths.lift_curve}:
+  #         template: bar_horizontal_sorted
+  #         title: "lift curve (test)"
+  #         x: cumulative_lift
+  #         y: bin

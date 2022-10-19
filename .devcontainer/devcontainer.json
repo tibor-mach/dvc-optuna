@@ -1,0 +1,75 @@
+{
+	"name": "Dev environment",
+	"runArgs": [
+		"--init"
+	],
+	"dockerFile": "Dockerfile",
+	"build": {
+		"args": {
+			// Sets container user as the local user
+			"USERNAME": "${localEnv:USER}"
+		}
+	},
+	// Sets the run context to one level up instead of the .devcontainer folder.
+	"context": "..",
+	// Set *default* container specific settings.json values on container create.
+	"settings": {
+		"security.workspace.trust.untrustedFiles": "open",
+		"editor.rulers": [
+			88,
+			{
+				"column": 100,
+				"color": "#CC0000"
+			}
+		],
+			"autoDocstring.docstringFormat": "numpy",
+			"[python]": {
+				"editor.defaultFormatter": "ms-python.python"
+			},
+			"python.formatting.blackArgs": [
+				"--line-length=88"
+			],
+			"redhat.telemetry.enabled": false,
+			"terminal.integrated.defaultProfile.linux": "zsh",
+			"files.associations": {
+				"*.dvc": "yaml",
+				"dvc.lock": "yaml"
+			},
+			"open-in-browser.default": "firefox",
+			"autoDocstring.startOnNewLine": true,
+			"workbench.settings.useSplitJSON": true,
+			"workbench.settings.editor": "json"
+		},
+
+	// Add the IDs of extensions you want installed when the container is created.
+	"extensions": [
+		"ms-python.python",
+		"njpwerner.autodocstring",
+		"aaron-bond.better-comments",
+		"ms-azuretools.vscode-docker",
+        "christian-kohler.path-intellisense",
+        "cschleiden.vscode-github-actions",
+        "cssho.vscode-svgviewer",
+        "eamodio.gitlens",
+        "GitHub.vscode-pull-request-github",
+        "Gruntfuggly.todo-tree",
+        "iterative.dvc",
+        "mechatroner.rainbow-csv",
+        "mhutchie.git-graph",
+        "ms-azuretools.vscode-azureresourcegroups",
+        "ms-azuretools.vscode-azurestorage",
+        "ms-azuretools.vscode-docker",
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-toolsai.jupyter",
+        "ms-toolsai.jupyter-keymap",
+        "ms-toolsai.jupyter-renderers",
+        "ms-vscode.azure-account",
+        "redhat.vscode-yaml",
+        "techer.open-in-browser"
+	],
+	"mounts": [
+		"source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind",
+		"source=${localEnv:HOME}/.ssh,target=/home/${localEnv:USER}/.ssh,type=bind"
+	]
+}

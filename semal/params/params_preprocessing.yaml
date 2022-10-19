@@ -1,0 +1,63 @@
+nominal_features:
+  steps:
+    impute_missing:
+      transformer: SimpleImputer
+      params:
+        strategy: constant
+        fill_value: missing_value
+
+    onehot_encoder:
+      transformer: OneHotEncoder
+      params:
+        handle_unknown: infrequent_if_exist
+        min_frequency: 0.01
+      hyperparam_space:
+        min_frequency:
+          name: UniformDistribution
+          attributes:
+            low: 2
+            high: 10
+  features_in:
+    [
+      "Location",
+      "WindGustDir",
+      "WindDir9am",
+      "WindDir3pm",
+    ]
+
+ordinal_features:
+  steps:
+    ordinal_encoder:
+      transformer: OrdinalEncoder
+      params:
+        handle_unknown: use_encoded_value
+        unknown_value: -1
+        encoded_missing_value: -2
+  features_in: [RainToday]
+
+cardinal_features:
+  steps:
+    imputer:
+      transformer: SimpleImputer
+      params:
+        strategy: median
+    scaler:
+      transformer: RobustScaler
+  features_in:
+    [
+      "MinTemp",
+      "MaxTemp",
+      "Rainfall",
+      "Humidity9am",
+      "Humidity3pm",
+      "Pressure9am",
+      "Pressure3pm",
+      "Temp9am",
+      "Temp3pm",
+    ]
+
+passthrough_features:
+  steps:
+    passthrough:
+      transformer: passthrough
+  features_in: []

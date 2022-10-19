@@ -1,0 +1,4 @@
+[core]
+    remote = baseremote
+['remote "baseremote"']
+    url = s3://simple-ml-dvc-remote

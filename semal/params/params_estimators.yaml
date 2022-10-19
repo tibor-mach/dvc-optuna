@@ -1,0 +1,66 @@
+# reference: https://optuna.readthedocs.io/en/latest/reference/distributions.html
+global_random_state: &global_random_state 0
+
+random_forest:
+  class_module: sklearn.ensemble
+  class_name: RandomForestClassifier
+  params:
+    n_estimators: 30
+    max_depth: 5
+    random_state: *global_random_state
+    n_jobs: -1
+  hyperparam_space:
+    n_estimators:
+      name: IntUniformDistribution
+      attributes:
+        low: 10
+        high: 200
+    max_depth:
+      name: IntUniformDistribution
+      attributes:
+        low: 2
+        high: 10
+  search_params:
+    n_trials: 10
+    cv: 5
+    random_state: *global_random_state
+    n_jobs: -1
+
+xgboost_classifier:
+  class_module: xgboost
+  class_name: XGBClassifier
+  params:
+    eval_metric: aucpr
+    booster: gbtree
+    tree_method: hist
+    n_estimators: 150
+    learning_rate: 0.2
+    max_depth: 10
+    gamma: 6.0
+    subsample: 0.9
+    random_state: *global_random_state
+  hyperparam_space:
+    n_estimators:
+      name: IntUniformDistribution
+      attributes:
+        low: 10
+        high: 200
+    learning_rate:
+      name: UniformDistribution
+      attributes:
+        low: 0.0
+        high: 1.0
+    max_depth:
+      name: IntUniformDistribution
+      attributes:
+        low: 2
+        high: 10
+    gamma:
+      name: UniformDistribution
+      attributes:
+        low: 0.0
+        high: 20
+  search_params:
+    n_trials: 5
+    cv: 5
+    random_state: *global_random_state
