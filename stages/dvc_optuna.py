@@ -2,6 +2,7 @@ import optuna
 import joblib
 import dvc.api
 
+from dvc.api import make_checkpoint
 from sklearn.datasets import make_classification
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
@@ -21,7 +22,7 @@ def objective(trial):
 
     # save
     joblib.dump(clf, PARAMS["paths"]["model"], compress=1)
-
+    make_checkpoint()
     return clf.score(X_test, y_test)
 
 
