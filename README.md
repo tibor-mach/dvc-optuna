@@ -28,4 +28,5 @@ of making sure that we can keep it in code and keep it in dvc.yaml while keeping
 - adding optuna visualisations to plots automatically?
 - hyperparameter space defined in params.yaml? (using optuna de-serialization)
 - integration of DVC and optuna CLI?
+- [Reproducibility might be hard in specific scenarios](https://optuna.readthedocs.io/en/stable/faq.html#how-can-i-obtain-reproducible-optimization-results) but there probably isn't much that DVC can do about that.
 - probably not a good idea to attempt a one-size fits all integration which restricts the user (Optuna has a lot of options)...on the other hand some optuna integrations kind of work like that already (e.g. `OptunaSearchCV`), always a compromise though.
