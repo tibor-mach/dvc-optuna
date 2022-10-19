@@ -21,7 +21,9 @@ def objective(trial):
     clf.fit(X_train, y_train)
 
     # save
+    # we could of course use MLEM here instead
     joblib.dump(clf, PARAMS["paths"]["model"], compress=1)
+    # if make_checkpoint allowed for named checkpoints, it could be useful (pair them with trials)
     make_checkpoint()
     return clf.score(X_test, y_test)
 
@@ -30,3 +32,4 @@ if __name__ == "__main__":
 
     study = optuna.create_study(direction="maximize")
     study.optimize(objective, n_trials=10)
+    joblib.dump(study, PARAMS["paths"]["study"], compress=1)

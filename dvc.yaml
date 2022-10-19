@@ -6,7 +6,8 @@ stages:
       - stages/dvc_optuna.py
 
     outs:
-      - ${paths.model}
+      - ${paths.model}:
+          checkpoint: true
       # - ${paths.study}
     params:
       - seed
