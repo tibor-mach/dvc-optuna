@@ -1,0 +1,13 @@
+stages:
+  dvc_optuna:
+    cmd: python stages/dvc_optuna.py
+    deps:
+      - requirements.txt
+      - stages/dvc_optuna.py
+
+    outs:
+      - ${paths.model}
+      # - ${paths.study}
+    params:
+      - seed
+      - n_trials

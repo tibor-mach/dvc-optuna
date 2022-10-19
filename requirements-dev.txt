@@ -4,16 +4,6 @@ IPython
 jupyterlab
 notebook
 
-# sphinx docs
-nbsphinx
-numpydoc
-sphinx
-sphinx-copybutton
-sphinx-inline-tabs
-sphinx-jsonschema
-sphinx_design
-furo
-
 # various utilities
 black
 pre-commit

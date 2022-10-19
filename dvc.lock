@@ -1,0 +1,19 @@
+schema: '2.0'
+stages:
+  dvc_optuna:
+    cmd: python stages/dvc_optuna.py
+    deps:
+    - path: requirements.txt
+      md5: 4b84249e51a366c79d6dad7e44f7d383
+      size: 156
+    - path: stages/dvc_optuna.py
+      md5: feaa4d2311ead524c2994975756aed2c
+      size: 752
+    params:
+      params.yaml:
+        n_trials: 5
+        seed: 42
+    outs:
+    - path: model/model.joblib
+      md5: 7d0edbc5c34bdfa1ed8404a8459d52e2
+      size: 653

@@ -1,0 +1,6 @@
+seed: 42
+n_trials: 5
+
+paths:
+  model: "model/model.joblib"
+  study: "model/study.joblib"
