@@ -4,3 +4,4 @@ n_trials: 5
 paths:
   model: model/model.joblib
   study: model/study.joblib
+  metrics: metrics/summary.json

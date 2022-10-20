@@ -8,7 +8,9 @@ stages:
     outs:
       - ${paths.model}:
           checkpoint: true
-      # - ${paths.study}
+      - ${paths.study}
     params:
       - seed
       - n_trials
+    metrics:
+      - ${paths.metrics}

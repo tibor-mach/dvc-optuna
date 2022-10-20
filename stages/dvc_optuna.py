@@ -1,4 +1,5 @@
 import optuna
+import json
 import joblib
 import dvc.api
 
@@ -20,12 +21,21 @@ def objective(trial):
     clf = LogisticRegression(C=C)
     clf.fit(X_train, y_train)
 
-    # save
+    metrics = {
+        "C": C,
+        "optuna_score": clf.score(X_test, y_test),
+    }
+
+    # save model, metrics (similarly for plots or anything else)
+    with open(PARAMS["paths"]["metrics"], "w") as f:
+        json.dump(metrics, f)
+
     # we could of course use MLEM here instead
     joblib.dump(clf, PARAMS["paths"]["model"], compress=1)
+
     # if make_checkpoint allowed for named checkpoints, it could be useful (pair them with trials)
     make_checkpoint()
-    return clf.score(X_test, y_test)
+    return metrics["optuna_score"]
 
 
 if __name__ == "__main__":
