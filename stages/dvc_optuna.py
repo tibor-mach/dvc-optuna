@@ -31,7 +31,7 @@ def objective(trial):
         json.dump(metrics, f)
 
     # we could of course use MLEM here instead
-    joblib.dump(clf, PARAMS["paths"]["model"], compress=1)
+    joblib.dump(clf, PARAMS["paths"]["trial_model"], compress=1)
 
     # if make_checkpoint allowed for named checkpoints, it could be useful (pair them with trials)
     make_checkpoint()

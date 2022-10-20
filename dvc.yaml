@@ -6,7 +6,7 @@ stages:
       - stages/dvc_optuna.py
 
     outs:
-      - ${paths.model}:
+      - ${paths.trial_model}:
           checkpoint: true
       - ${paths.study}
     params:
