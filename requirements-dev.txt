@@ -8,3 +8,5 @@ notebook
 black
 pre-commit
 docformatter[tomli]
+
+git+https://github.com/iterative/dvclive.git@optuna-callback

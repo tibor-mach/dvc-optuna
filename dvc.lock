@@ -4,22 +4,19 @@ stages:
     cmd: python stages/dvc_optuna.py
     deps:
     - path: requirements.txt
-      md5: 4b84249e51a366c79d6dad7e44f7d383
-      size: 156
+      md5: fb76bbd9d8a05e11373b3ca915b3fa1e
+      size: 158
     - path: stages/dvc_optuna.py
-      md5: b1489d516e469bc7f5271cd724500460
-      size: 1261
+      md5: 5c7499133bfab1fb866029bf1ce0de96
+      size: 1011
     params:
       params.yaml:
         n_trials: 5
         seed: 43
     outs:
-    - path: metrics/summary.json
-      md5: dd0365d7070141c8d459bf24f8d26132
-      size: 46
+    - path: dvlive-optuna/plots/metrics/metric.tsv
+      md5: 61b5ea5b27cf7be89877928c5ce35f51
+      size: 162
     - path: model/study.joblib
-      md5: a5fd8bde0152f7f5f448e3cd37b17fec
-      size: 6988
-    - path: model/trial_model.joblib
-      md5: 81e945428d0b05827a3710f822951e38
-      size: 652
+      md5: 46db1fc30fbf520998910981d4b8bd1e
+      size: 7360

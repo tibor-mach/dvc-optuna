@@ -12,5 +12,4 @@ venv: ## set up a simple python virtual environment and install additional pre-c
 	&& python3 -m pip install --upgrade pip \
 	&& python3 -m pip install -r requirements.txt \
 	&& python3 -m pip install -r requirements-dev.txt \
-	&& python3 -m pip install -e . \
 	&& pre-commit install --hook-type pre-push --hook-type post-checkout --hook-type pre-commit

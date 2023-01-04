@@ -1,9 +1,9 @@
-scikit-learn==1.1
+scikit-learn==1.2
 # hyperparameter optimization
 optuna==3.0
 
 # pipelines, visualisations and monitoring
-dvc[s3]==2.30
+dvc[s3]==2.38.1
 
 # versioning, deployment
-mlem==0.2.9
+mlem==0.4.1

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="refresh" content="5">
+    <title>DVC Plot</title>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/vega@5.20.2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.2.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.18.2"></script>
+
+    <style>
+        table {
+            border-spacing: 15px;
+        }
+    </style>
+</head>
+<body>
+
+        <div id="params_yaml" style="text-align: center; padding: 10x">
+            <p>params_yaml</p>
+            <div style="display: flex;justify-content: center;">
+                <table>
+<thead>
+<tr><th style="text-align: right;">        C</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align: right;">0.0527674</td></tr>
+</tbody>
+</table>
+            </div>
+        </div>
+
+        <div id="metrics_json" style="text-align: center; padding: 10x">
+            <p>metrics_json</p>
+            <div style="display: flex;justify-content: center;">
+                <table>
+<thead>
+<tr><th style="text-align: right;">  metric</th><th style="text-align: right;">  step</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align: right;">    0.92</td><td style="text-align: right;">    19</td></tr>
+</tbody>
+</table>
+            </div>
+        </div>
+
+    <div id = "static_metric">
+        <script type = "text/javascript">
+            var spec = {
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "data": {
+        "values": [
+    {
+        "metric": "0.44",
+        "rev": "workspace",
+        "step": "0"
+    },
+    {
+        "metric": "0.44",
+        "rev": "workspace",
+        "step": "1"
+    },
+    {
+        "metric": "0.44",
+        "rev": "workspace",
+        "step": "2"
+    },
+    {
+        "metric": "0.44",
+        "rev": "workspace",
+        "step": "3"
+    },
+    {
+        "metric": "0.44",
+        "rev": "workspace",
+        "step": "4"
+    },
+    {
+        "metric": "0.92",
+        "rev": "workspace",
+        "step": "5"
+    },
+    {
+        "metric": "0.44",
+        "rev": "workspace",
+        "step": "6"
+    },
+    {
+        "metric": "0.92",
+        "rev": "workspace",
+        "step": "7"
+    },
+    {
+        "metric": "0.84",
+        "rev": "workspace",
+        "step": "8"
+    },
+    {
+        "metric": "0.92",
+        "rev": "workspace",
+        "step": "9"
+    },
+    {
+        "metric": "0.92",
+        "rev": "workspace",
+        "step": "10"
+    },
+    {
+        "metric": "0.92",
+        "rev": "workspace",
+        "step": "11"
+    },
+    {
+        "metric": "0.92",
+        "rev": "workspace",
+        "step": "12"
+    },
+    {
+        "metric": "0.92",
+        "rev": "workspace",
+        "step": "13"
+    },
+    {
+        "metric": "0.88",
+        "rev": "workspace",
+        "step": "14"
+    },
+    {
+        "metric": "0.92",
+        "rev": "workspace",
+        "step": "15"
+    },
+    {
+        "metric": "0.92",
+        "rev": "workspace",
+        "step": "16"
+    },
+    {
+        "metric": "0.88",
+        "rev": "workspace",
+        "step": "17"
+    },
+    {
+        "metric": "0.92",
+        "rev": "workspace",
+        "step": "18"
+    },
+    {
+        "metric": "0.92",
+        "rev": "workspace",
+        "step": "19"
+    }
+]
+    },
+    "title": "",
+    "width": 300,
+    "height": 300,
+    "layer": [
+        {
+            "encoding": {
+                "x": {
+                    "field": "step",
+                    "type": "quantitative",
+                    "title": "step"
+                },
+                "y": {
+                    "field": "metric",
+                    "type": "quantitative",
+                    "title": "metric",
+                    "scale": {
+                        "zero": false
+                    }
+                },
+                "color": {
+                    "field": "rev",
+                    "type": "nominal"
+                },
+                "tooltip": [
+                    {
+                        "field": "step",
+                        "type": "quantitative"
+                    },
+                    {
+                        "field": "metric",
+                        "type": "quantitative"
+                    },
+                    {
+                        "field": "rev",
+                        "type": "nominal"
+                    }
+                ]
+            },
+            "layer": [
+                {
+                    "mark": "line"
+                },
+                {
+                    "transform": [
+                        {
+                            "filter": {
+                                "param": "hover",
+                                "empty": false
+                            }
+                        }
+                    ],
+                    "mark": "circle"
+                },
+                {
+                    "mark": "rule",
+                    "params": [
+                        {
+                            "name": "hover",
+                            "select": {
+                                "type": "point",
+                                "on": "mouseover",
+                                "nearest": true
+                            }
+                        }
+                    ],
+                    "encoding": {
+                        "color": {
+                            "condition": {
+                                "param": "hover",
+                                "empty": false,
+                                "value": "1"
+                            },
+                            "value": "transparent"
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}
+;
+            vegaEmbed('#static_metric', spec);
+        </script>
+    </div>
+
+</body>
+</html>

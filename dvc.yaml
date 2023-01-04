@@ -6,11 +6,11 @@ stages:
       - stages/dvc_optuna.py
 
     outs:
-      - ${paths.trial_model}:
-          checkpoint: true
       - ${paths.study}
     params:
       - seed
       - n_trials
-    metrics:
-      - ${paths.metrics}
+    # metrics:
+    #   - ${paths.metrics}
+    plots:
+      - dvlive-optuna/plots/metrics/metric.tsv

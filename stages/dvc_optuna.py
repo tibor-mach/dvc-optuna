@@ -1,8 +1,10 @@
 import optuna
-import json
 import joblib
 import dvc.api
+import time
 
+
+from dvclive.optuna import DVCLiveCallback
 from dvc.api import make_checkpoint
 from sklearn.datasets import make_classification
 from sklearn.linear_model import LogisticRegression
@@ -26,20 +28,13 @@ def objective(trial):
         "optuna_score": clf.score(X_test, y_test),
     }
 
-    # save model, metrics (similarly for plots or anything else)
-    with open(PARAMS["paths"]["metrics"], "w") as f:
-        json.dump(metrics, f)
-
-    # we could of course use MLEM here instead
-    joblib.dump(clf, PARAMS["paths"]["trial_model"], compress=1)
-
-    # if make_checkpoint allowed for named checkpoints, it could be useful (pair them with trials)
-    make_checkpoint()
+    time.sleep(1)
     return metrics["optuna_score"]
 
 
 if __name__ == "__main__":
 
+    dvclive_callback = DVCLiveCallback()
     study = optuna.create_study(direction="maximize")
-    study.optimize(objective, n_trials=10)
+    study.optimize(objective, n_trials=20, callbacks=[dvclive_callback])
     joblib.dump(study, PARAMS["paths"]["study"], compress=1)
